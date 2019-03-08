@@ -1,0 +1,68 @@
+<%- model_class = Kiban -%>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<div class="page-header">
+  <h1>基板開発リスト　　　<%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+
+<link type="text/css" rel="stylesheet"
+  href="http://code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css" />
+<script type="text/javascript"
+  src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript"
+  src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+
+
+<p id="notice"><%= notice %></p>
+
+<%= form_tag kibans_path, :method => 'get' do %>
+  <p>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Search", :number => nil %>
+  </p>
+<% end %>
+<%= yield %>
+
+<p>
+  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    設定
+  </button>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+    <%= form_tag url_for(:action => 'index'),remote: true ,id: "ajax" do %> <%#=kibans_path, :method => 'get', :remote => true%>
+      期限を設定してください  <%= number_field_tag :time_change , params[:time_change], in: 0...10000 ,class: 'js-form' %>日<br>
+      メーカー期限のない基板も表示するか<br>
+      <%= radio_button_tag("zero",true,params[:zero] == "true")%><%#試し%>
+      <%= label_tag("zero_1","はい")%>
+      <%= radio_button_tag("zero",false,params[:zero] == "false")%><%#試し%>
+      <%= label_tag("zero_2","いいえ")%>
+      <br>終了している基板も表示するか<br>
+      <%= radio_button_tag("finish",true,params[:finish] == "true")%><%#試し%>
+      <%= label_tag("finish_1","はい")%>
+      <%= radio_button_tag("finish",false,params[:finish] == "false")%><%#試し%>
+      <%= label_tag("finish_2","いいえ")%>
+      <%= submit_tag "変更",:class => 'js-submit'%>
+    <% end %>
+  </div>
+</div>
+<div id = "deadtime"><%= params[:time_change] %></div>
+
+<script>
+  $(function($){
+      $('#ajax')
+          .bind("ajax:complete", function(data){
+             //ここに具体的な処理を記述
+             alert("success1")
+          });
+  });
+</script>
+
+<div id="new">
+<%= render :partial => 'table'%>
+</div>
+<%= link_to '基板登録', new_kiban_path %>
+<%= link_to 'メーカー登録', new_maker_deadline_path %>
+<%= link_to 'メーカー一覧', maker_deadlines_path %>

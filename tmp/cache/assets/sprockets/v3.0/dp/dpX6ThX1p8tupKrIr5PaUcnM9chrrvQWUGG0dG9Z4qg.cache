@@ -1,0 +1,11 @@
+I"ß(function() {
+  $(function() {
+    return $('#ajax').on('ajax:complete', function(event) {
+      var response;
+      response = event.detail[0].response;
+      return $('#new').html(response);
+    });
+  });
+
+}).call(this);
+:ET

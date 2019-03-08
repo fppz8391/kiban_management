@@ -1,0 +1,12 @@
+<%= simple_form_for @kiban, :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.input :基板名 %>
+  <%= f.input :最終注文日,start_year: 2000, end_year: Date.today.year  %>
+  メーカー<br>
+  <%= f.select :メーカー,options_from_collection_for_select(MakerDeadline.order(メーカー: :desc), :メーカー, :メーカー, :selected => @kiban.メーカー),:include_blank => "選択して下さい" %>
+  <br>
+  <br>
+  <%= f.input:終了, as: :boolean%>
+  <%= f.input :備考%>
+  <%= f.button :submit, :class => 'btn-primary' %>
+  <%= link_to "Cancel" , :back %>
+<% end %>

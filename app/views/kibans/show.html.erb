@@ -1,0 +1,27 @@
+<%- model_class = Kiban -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:基板名) %>:</strong></dt>
+  <dd><%= @kiban.基板名 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:最終注文日) %>:</strong></dt>
+  <dd><%= @kiban.最終注文日 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:メーカー) %>:</strong></dt>
+  <dd><%= @kiban.メーカー %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:終了) %>:</strong></dt>
+  <dd><%= @kiban.終了 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:備考) %>:</strong></dt>
+  <dd><%= @kiban.備考 %></dd>
+</dl>
+
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              kibans_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_kiban_path(@kiban), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              kiban_path(@kiban),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
