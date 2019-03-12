@@ -5,13 +5,9 @@ Rails.application.routes.draw do
 
     root to: 'kibans#index'
 
-    post 'kibans/:id' => "kibans#index"
-
-    post 'kibans/ajax_test'
+    post 'kibans/:id' => "kibans#check"
 
     get 'maker_deadlines/maker_deadline'
-
-    root to: 'maker_deadlines#index'
 
     resources :kibans
     resources :maker_deadlines

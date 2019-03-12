@@ -29,20 +29,17 @@ class KibansController < ApplicationController
               if((@Maker.期限 == 0 && params[:zero] == "true") || (params[:finish] == "true" && kiban.終了 == true))
                 kiban.update(期限間近: true);
               end
-              if(params[:kiban_finish] != nil)
-                kiban.update(終了: params[:kiban_finish])
-              end
             end
             @kibans2 = @kibans.where(期限間近: true).order(経過日: :desc);
 
             if request.post?
-              render :partial => 'table'
+              render :partial => 'table' #テンプレート化しているので表の部分のみ差し替える
             end
         end
 
-          def ajax_test
-            html = render_to_string :partial => "table"
-            render :json => {:success => 1, :html => html}
+        def check
+          check = Kiban.find(params[:id]); #チェックボックスを操作したidの基盤のデータ
+          check.update(終了: !check.終了) #終了を反転させる
         end
 
         # GET /users/1
@@ -110,10 +107,6 @@ class KibansController < ApplicationController
         # Never trust parameters from the scary internet, only allow the white list through.
         def kiban_params
             params.require(:kiban).permit(:基板名 ,:経過日, :最終注文日,:メーカー ,:終了, :備考)
-        end
-
-        def todo_params
-          params.require(:todo).permit(:content)
         end
 
 end
