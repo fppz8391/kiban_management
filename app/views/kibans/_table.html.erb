@@ -24,7 +24,19 @@
       <tr>
         <td><font color = <%= @color %>><%= @progress%> </font></td>
         <td><%= kiban.基板名 %></td>
-        <td><%= kiban.最終注文日 %></td>
+        <%= form_tag ("/kibans/index"),remote: true ,id: "ajax2" do %> <%#非同期ができてない%>
+        <td><%= date_select :select,:date,
+          {:use_month_numbers => true,
+            start_year: 2000,
+            end_year: Time.now.year,
+            default: kiban.最終注文日,
+            date_separator: "-",
+            remote: true,
+            }
+             %>
+             <input type='hidden' name='id' value=<%= kiban.id%> ><%#パラメーターの増設%>
+             <%= submit_tag "変更"%></td>
+            <% end %>
         <td><%= kiban.メーカー %></td>
         <td><%= check_box_tag kiban.id, true, kiban.終了, {
     data: {
@@ -38,8 +50,38 @@
         <td><%= link_to 'Edit', edit_kiban_path(kiban) %></td>
         <td><%= link_to 'Destroy', kiban, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
-    <% end %>
-
+<% end %>
   </tbody>
 </table>
+
+<script>
+  var ajax1;
+
+  ajax1 = function() {};
+
+  $(function() {
+    return $('#ajax2').on('ajax:complete', function(event) {
+      var response;
+      response = event.detail[0].response;
+      return $('#new').html(response);
+    });
+  });
+
+  $(document).on("click", ajax1);
+
+  var ajax3;
+
+  ajax3 = function() {};
+
+  $(function() {
+    return $('#ajax').on('ajax:complete', function(event) {
+      var response;
+      response = event.detail[0].response;
+      return $('#new').html(response);
+    });
+  });
+
+  $(document).on("click", ajax3);
+
+</script>
 <br>

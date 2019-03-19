@@ -32,20 +32,18 @@
     <div class="navbar-nav">
       <a class="nav-item nav-link active" href="http://localhost:3000/kibans">ホーム <span class="sr-only">(現位置)</span></a>
       <a class="nav-item nav-link" href="http://localhost:3000/maker_deadlines">リンク1</a>
-      <a class="nav-item nav-link" href="#">リンク2</a>
+      <a class="nav-item nav-link" href="http://localhost:3000/maker_deadlines">リンク2</a>
     </div>
   </div>
 </nav>
 
 
-    <div class="container">
+    <div class="container"><!--ここでhtmlの横幅の変更を行う-->
       <div class="row">
-        <div class="col-lg-9">
+        <div class="col-lg-12">
           <%= bootstrap_flash %>
           <%= yield %>
         </div>
-        <div class="col-lg-3">
-        </div><!--/span-->
       </div><!--/row-->
 
       <footer>

@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
     get 'kibans/index'
 
-    post 'kibans/index'
+    post 'kibans/index' => "kibans#index" 
 
     root to: 'kibans#index'
 

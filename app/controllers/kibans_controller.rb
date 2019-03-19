@@ -8,6 +8,11 @@ class KibansController < ApplicationController
           if @kibans == nil
             @kibans = Kiban.order(経過日: :desc)
           end
+          if(params[:id] != nil)
+            kiban = Kiban.find(params[:id]);
+            date1 = change_date();
+            kiban.update(最終注文日: date1)
+          end
             @d1 = Date.today;
               if(params[:time_change]==nil) then
                 params[:time_change] = 120;
@@ -30,6 +35,7 @@ class KibansController < ApplicationController
                 kiban.update(期限間近: true);
               end
             end
+
             @kibans2 = @kibans.where(期限間近: true).order(経過日: :desc);
 
             if request.post?
@@ -39,7 +45,10 @@ class KibansController < ApplicationController
 
         def check
           check = Kiban.find(params[:id]); #チェックボックスを操作したidの基盤のデータ
-          check.update(終了: !check.終了) #終了を反転させる
+          date1 = change_date();
+          if(check.最終注文日 == date1 || date1 == nil)
+            check.update(終了: !check.終了) #終了を反転させる
+          end
         end
 
         # GET /users/1
@@ -109,4 +118,11 @@ class KibansController < ApplicationController
             params.require(:kiban).permit(:基板名 ,:経過日, :最終注文日,:メーカー ,:終了, :備考)
         end
 
+        def change_date
+          if(params[:select] != nil)
+            event = params[:select]
+            date = Date.new event["date(1i)"].to_i, event["date(2i)"].to_i, event["date(3i)"].to_i
+            return date
+          end
+        end
 end
