@@ -11,7 +11,9 @@ class KibansController < ApplicationController
           if(params[:id] != nil)
             kiban = Kiban.find(params[:id]);
             date1 = change_date();
-            kiban.update(最終注文日: date1)
+            if(date1 != nil) then
+              kiban.update(最終注文日: date1)
+            end
           end
             @d1 = Date.today;
               if(params[:time_change]==nil) then
@@ -45,10 +47,7 @@ class KibansController < ApplicationController
 
         def check
           check = Kiban.find(params[:id]); #チェックボックスを操作したidの基盤のデータ
-          date1 = change_date();
-          if(check.最終注文日 == date1 || date1 == nil)
             check.update(終了: !check.終了) #終了を反転させる
-          end
         end
 
         # GET /users/1
@@ -119,10 +118,10 @@ class KibansController < ApplicationController
         end
 
         def change_date
-          if(params[:select] != nil)
-            event = params[:select]
-            date = Date.new event["date(1i)"].to_i, event["date(2i)"].to_i, event["date(3i)"].to_i
+          #if(params[:select] != nil)
+          #  event = params[:select]
+            date = Date.new params["date_1i"].to_i, params["date_2i"].to_i, params["date_3i"].to_i
             return date
-          end
+        #  end
         end
 end
