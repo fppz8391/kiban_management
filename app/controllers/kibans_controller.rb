@@ -25,6 +25,9 @@ class KibansController < ApplicationController
               if(params[:finish] == nil) then
                 params[:finish]="false"
               end
+              if(params[:all] == nil) then
+                params[:all]="false"
+              end
             @kibans.each do |kiban|
               @Maker= MakerDeadline.find_by(メーカー: kiban.メーカー)
               @approaching_deadline = (kiban.最終注文日 + (@Maker.期限*365) - @d1).to_i
@@ -33,7 +36,7 @@ class KibansController < ApplicationController
                 kiban.update(期限間近: false);
               else kiban.update(期限間近: true);
               end
-              if((@Maker.期限 == 0 && params[:zero] == "true") || (params[:finish] == "true" && kiban.終了 == true))
+              if((@Maker.期限 == 0 && params[:zero] == "true") || (params[:finish] == "true" && kiban.終了 == true && @approaching_deadline < params[:time_change].to_i) || params[:all] == "true")
                 kiban.update(期限間近: true);
               end
             end
@@ -46,7 +49,7 @@ class KibansController < ApplicationController
         end
 
         def check
-          check = Kiban.find(params[:id]); #チェックボックスを操作したidの基盤のデータ
+          check = Kiban.find(params[:id]); #チェックボックスを操作したidの基板のデータ
             check.update(終了: !check.終了) #終了を反転させる
         end
 
@@ -118,10 +121,7 @@ class KibansController < ApplicationController
         end
 
         def change_date
-          #if(params[:select] != nil)
-          #  event = params[:select]
             date = Date.new params["date_1i"].to_i, params["date_2i"].to_i, params["date_3i"].to_i
             return date
-        #  end
         end
 end

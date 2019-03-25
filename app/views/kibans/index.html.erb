@@ -4,7 +4,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <div class="page-header">
-  <h1>基板開発リスト　　　<%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <h1>基板開発リスト　　　<%#=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
 
 <p id="notice"><%= notice %></p>
@@ -26,45 +26,42 @@
   <div class="card card-body">
     <%= form_tag url_for(:action => 'index'),remote: true ,id: "ajax" do %> <%#=kibans_path, :method => 'get', :remote => true%>
       期限を設定してください  <%= number_field_tag :time_change , params[:time_change], in: 0...10000 ,class: 'time_change' %>日<br>
-      メーカー期限のない基板も表示するか<br>
+      メーカー期限のない基板も表示しますか<br>
       <%= radio_button_tag("zero",true,params[:zero] == "true",class: "zero")%><%#試し%>
       <%= label_tag("zero_1","はい")%>
       <%= radio_button_tag("zero",false,params[:zero] == "false",class: "zero")%><%#試し%>
       <%= label_tag("zero_2","いいえ")%>
-      <br>終了している基板も表示するか<br>
+      <br>終了している基板も表示しますか<br>
       <%= radio_button_tag("finish",true,params[:finish] == "true",class: "finish")%><%#試し%>
       <%= label_tag("finish_1","はい")%>
       <%= radio_button_tag("finish",false,params[:finish] == "false",class: "finish")%><%#試し%>
       <%= label_tag("finish_2","いいえ")%>
-      <%= submit_tag "変更"%>
+      <br>全ての基板を表示しますか<br>
+      <%= radio_button_tag("all",true,params[:all] == "true",class: "all")%>
+      <%= label_tag("all","はい")%>
+      <%= radio_button_tag("all",false,params[:all] == "false",class: "all")%><%#試し%>
+      <%= label_tag("all","いいえ")%>
     <% end %>
   </div>
 </div>
 
 <script>
-  $(document).on('ready',function(){
-  $(function($){
-      $('#ajax')
-          .bind("ajax:complete", function(data){
-             //ここに具体的な処理を記述
-             alert("success1")
-          });
-  });
-})
+  $(".zero , .finish , .time_change , .all").change(function() {　
+      return $.ajax({
+        type: 'POST',
+        url: '/kibans/index',//actionのindexを叩く
+        dateType: 'json',
+        data: {
+          zero: $("input[class^=zero]:checked").val(),//期限なしの基板を含むかのパラメータ
+          finish: $("input[class^=finish]:checked").val(),//終了している基板を含むかのパラメータ
+          time_change: $(".time_change").val(),//期限のパラメータ
+          all: $("input[class^=all]:checked").val()//全表示のパラメータ
+        }
+      }).done(function(data){
+        return $("#new").html(data)//htmlの書き換え
+      });
+    });
 
-var ajax3;
-
-ajax3 = function() {};
-
-$(function() {
-  return $('#ajax').on('ajax:complete', function(event) {
-    var response;
-    response = event.detail[0].response;
-    return $('#new').html(response);
-  });
-});
-
-$(document).on("click", ajax3);
 </script>
 
 <div id="new">
