@@ -7,22 +7,14 @@
   <h1>基板開発リスト　　　<%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
 
-<link type="text/css" rel="stylesheet"
-  href="http://code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css" />
-<script type="text/javascript"
-  src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script type="text/javascript"
-  src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
-
-
 <p id="notice"><%= notice %></p>
 
-<%= form_tag kibans_path, :method => 'get' do %>
+<%#= form_tag kibans_path, :method => 'get' do %>
   <p>
-    <%= text_field_tag :search, params[:search] %>
-    <%= submit_tag "Search", :number => nil %>
+    <%#= text_field_tag :search, params[:search] %>
+    <%#= submit_tag "Search", :number => nil %>
   </p>
-<% end %>
+<%# end %>
 <%= yield %>
 
 <p>
@@ -33,24 +25,24 @@
 <div class="collapse" id="collapseExample">
   <div class="card card-body">
     <%= form_tag url_for(:action => 'index'),remote: true ,id: "ajax" do %> <%#=kibans_path, :method => 'get', :remote => true%>
-      期限を設定してください  <%= number_field_tag :time_change , params[:time_change], in: 0...10000 ,class: 'js-form' %>日<br>
+      期限を設定してください  <%= number_field_tag :time_change , params[:time_change], in: 0...10000 ,class: 'time_change' %>日<br>
       メーカー期限のない基板も表示するか<br>
-      <%= radio_button_tag("zero",true,params[:zero] == "true")%><%#試し%>
+      <%= radio_button_tag("zero",true,params[:zero] == "true",class: "zero")%><%#試し%>
       <%= label_tag("zero_1","はい")%>
-      <%= radio_button_tag("zero",false,params[:zero] == "false")%><%#試し%>
+      <%= radio_button_tag("zero",false,params[:zero] == "false",class: "zero")%><%#試し%>
       <%= label_tag("zero_2","いいえ")%>
       <br>終了している基板も表示するか<br>
-      <%= radio_button_tag("finish",true,params[:finish] == "true")%><%#試し%>
+      <%= radio_button_tag("finish",true,params[:finish] == "true",class: "finish")%><%#試し%>
       <%= label_tag("finish_1","はい")%>
-      <%= radio_button_tag("finish",false,params[:finish] == "false")%><%#試し%>
+      <%= radio_button_tag("finish",false,params[:finish] == "false",class: "finish")%><%#試し%>
       <%= label_tag("finish_2","いいえ")%>
-      <%= submit_tag "変更",:class => 'js-submit'%>
+      <%= submit_tag "変更"%>
     <% end %>
   </div>
 </div>
-<div id = "deadtime"><%= params[:time_change] %></div>
 
 <script>
+  $(document).on('ready',function(){
   $(function($){
       $('#ajax')
           .bind("ajax:complete", function(data){
@@ -58,6 +50,21 @@
              alert("success1")
           });
   });
+})
+
+var ajax3;
+
+ajax3 = function() {};
+
+$(function() {
+  return $('#ajax').on('ajax:complete', function(event) {
+    var response;
+    response = event.detail[0].response;
+    return $('#new').html(response);
+  });
+});
+
+$(document).on("click", ajax3);
 </script>
 
 <div id="new">

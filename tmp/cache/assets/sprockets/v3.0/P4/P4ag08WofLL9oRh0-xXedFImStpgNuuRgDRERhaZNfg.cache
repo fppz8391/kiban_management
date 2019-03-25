@@ -1,0 +1,11 @@
+I"ê(function() {
+  $(function() {
+    return $('#ajax').on('ready', 'turbolinks:load', function(event) {
+      var response;
+      response = event.detail[0].response;
+      return $('#new').html(response);
+    });
+  });
+
+}).call(this);
+:ET

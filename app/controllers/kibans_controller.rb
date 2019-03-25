@@ -8,6 +8,13 @@ class KibansController < ApplicationController
           if @kibans == nil
             @kibans = Kiban.order(経過日: :desc)
           end
+          if(params[:id] != nil)
+            kiban = Kiban.find(params[:id]);
+            date1 = change_date();
+            if(date1 != nil) then
+              kiban.update(最終注文日: date1)
+            end
+          end
             @d1 = Date.today;
               if(params[:time_change]==nil) then
                 params[:time_change] = 120;
@@ -29,20 +36,18 @@ class KibansController < ApplicationController
               if((@Maker.期限 == 0 && params[:zero] == "true") || (params[:finish] == "true" && kiban.終了 == true))
                 kiban.update(期限間近: true);
               end
-              if(params[:kiban_finish] != nil)
-                kiban.update(終了: params[:kiban_finish])
-              end
             end
+
             @kibans2 = @kibans.where(期限間近: true).order(経過日: :desc);
 
             if request.post?
-              render :partial => 'table'
+              render :partial => 'table' #テンプレート化しているので表の部分のみ差し替える
             end
         end
 
-          def ajax_test
-            html = render_to_string :partial => "table"
-            render :json => {:success => 1, :html => html}
+        def check
+          check = Kiban.find(params[:id]); #チェックボックスを操作したidの基盤のデータ
+            check.update(終了: !check.終了) #終了を反転させる
         end
 
         # GET /users/1
@@ -112,8 +117,11 @@ class KibansController < ApplicationController
             params.require(:kiban).permit(:基板名 ,:経過日, :最終注文日,:メーカー ,:終了, :備考)
         end
 
-        def todo_params
-          params.require(:todo).permit(:content)
+        def change_date
+          #if(params[:select] != nil)
+          #  event = params[:select]
+            date = Date.new params["date_1i"].to_i, params["date_2i"].to_i, params["date_3i"].to_i
+            return date
+        #  end
         end
-
 end
