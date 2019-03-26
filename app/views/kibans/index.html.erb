@@ -12,7 +12,7 @@
 <%#= form_tag kibans_path, :method => 'get' do %>
   <p>
     <%#= text_field_tag :search, params[:search] %>
-    <%#= submit_tag "Search", :number => nil %>
+    <%#= submit_tag "Search", :number => nil %><%#検索フォーム　実装してない%>
   </p>
 <%# end %>
 <%= yield %>
@@ -23,27 +23,35 @@
   </button>
 </p>
 <div class="collapse" id="collapseExample">
-  <div class="card card-body">
+  <div class="card card-body"><%#bootstrap 設定押した際の出し入れ%>
     <%= form_tag url_for(:action => 'index'),remote: true ,id: "ajax" do %> <%#=kibans_path, :method => 'get', :remote => true%>
       期限を設定してください  <%= number_field_tag :time_change , params[:time_change], in: 0...10000 ,class: 'time_change' %>日<br>
       メーカー期限のない基板も表示しますか<br>
-      <%= radio_button_tag("zero",true,params[:zero] == "true",class: "zero")%><%#試し%>
+      <%= radio_button_tag("zero",true,params[:zero] == "true",class: "zero")%>
       <%= label_tag("zero_1","はい")%>
-      <%= radio_button_tag("zero",false,params[:zero] == "false",class: "zero")%><%#試し%>
+      <%= radio_button_tag("zero",false,params[:zero] == "false",class: "zero")%>
       <%= label_tag("zero_2","いいえ")%>
       <br>終了している基板も表示しますか<br>
-      <%= radio_button_tag("finish",true,params[:finish] == "true",class: "finish")%><%#試し%>
+      <%= radio_button_tag("finish",true,params[:finish] == "true",class: "finish")%>
       <%= label_tag("finish_1","はい")%>
-      <%= radio_button_tag("finish",false,params[:finish] == "false",class: "finish")%><%#試し%>
+      <%= radio_button_tag("finish",false,params[:finish] == "false",class: "finish")%>
       <%= label_tag("finish_2","いいえ")%>
       <br>全ての基板を表示しますか<br>
       <%= radio_button_tag("all",true,params[:all] == "true",class: "all")%>
       <%= label_tag("all","はい")%>
-      <%= radio_button_tag("all",false,params[:all] == "false",class: "all")%><%#試し%>
+      <%= radio_button_tag("all",false,params[:all] == "false",class: "all")%>
       <%= label_tag("all","いいえ")%>
-    <% end %>
+    <% end %><%#form_tagを使用することでcssなしでウィンドウサイズに対応させるため%>
   </div>
 </div>
+
+<div id="new">
+<%= render :partial => 'table'%>
+</div>
+<%= link_to '基板登録', new_kiban_path %>
+<%= link_to 'メーカー登録', new_maker_deadline_path %>
+<%= link_to 'メーカー一覧', maker_deadlines_path %>
+
 
 <script>
   $(".zero , .finish , .time_change , .all").change(function() {　
@@ -63,10 +71,3 @@
     });
 
 </script>
-
-<div id="new">
-<%= render :partial => 'table'%>
-</div>
-<%= link_to '基板登録', new_kiban_path %>
-<%= link_to 'メーカー登録', new_maker_deadline_path %>
-<%= link_to 'メーカー一覧', maker_deadlines_path %>
