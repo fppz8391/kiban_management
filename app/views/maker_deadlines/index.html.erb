@@ -5,7 +5,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <div class="page-header">
-  <h1>メーカー一覧　　　<%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <h1>メーカー一覧　　　<%#=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
 
 
@@ -44,6 +44,6 @@
   </tbody>
 </table>
 <br>
-
+<%= link_to '基板登録', new_kiban_path %>
 <%= link_to '基板リスト', kibans_path,data: {turbolinks: false} %>
 <%= link_to 'メーカー登録', new_maker_deadline_path %>

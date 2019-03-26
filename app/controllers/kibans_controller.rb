@@ -5,48 +5,50 @@ class KibansController < ApplicationController
         # GET /users
         # GET /users.json
         def index
-          if @kibans == nil
-            @kibans = Kiban.order(経過日: :desc)
-          end
-          if(params[:id] != nil)
-            kiban = Kiban.find(params[:id]);
-            date1 = change_date();
-            if(date1 != nil) then
-              kiban.update(最終注文日: date1)
+            if @kibans == nil
+              @kibans = Kiban.order(経過日: :desc)
             end
-          end
+            if(params[:id] != nil)#リロード時との区別のため
+              kiban = Kiban.find(params[:id]);
+              date1 = change_date();
+              if(date1 != nil) then #check_box選択時との区別のため
+                kiban.update(最終注文日: date1)
+              end
+            end
             @d1 = Date.today;
-              if(params[:time_change]==nil) then
-                params[:time_change] = 120;
-              end
-              if(params[:zero]==nil) then
-                params[:zero] = "false";
-              end
-              if(params[:finish] == nil) then
-                params[:finish]="false"
-              end
+            if(params[:time_change]==nil) then
+              params[:time_change] = 120;
+            end
+            if(params[:zero]==nil) then
+              params[:zero] = "false";
+            end
+            if(params[:finish] == nil) then
+              params[:finish]="false"
+            end
+            if(params[:all] == nil) then
+              params[:all]="false"
+            end #リロードの際にパラメーターがないため初期設定として
             @kibans.each do |kiban|
               @Maker= MakerDeadline.find_by(メーカー: kiban.メーカー)
-              @approaching_deadline = (kiban.最終注文日 + (@Maker.期限*365) - @d1).to_i
+              @approaching_deadline = (kiban.最終注文日 + (@Maker.期限*365) - @d1).to_i #閏年を入れるとややこしいかつ一日の誤差は容認されたため含めていない
               kiban.update(経過日: @approaching_deadline);
               if (@approaching_deadline > params[:time_change].to_i || @Maker.期限 == 0 || kiban.終了 == true) then
                 kiban.update(期限間近: false);
               else kiban.update(期限間近: true);
               end
-              if((@Maker.期限 == 0 && params[:zero] == "true") || (params[:finish] == "true" && kiban.終了 == true))
+              if((@Maker.期限 == 0 && params[:zero] == "true") || (params[:finish] == "true" && kiban.終了 == true && @approaching_deadline < params[:time_change].to_i) || params[:all] == "true")
                 kiban.update(期限間近: true);
               end
             end
 
-            @kibans2 = @kibans.where(期限間近: true).order(経過日: :desc);
-
+            @kibans2 = @kibans.where(期限間近: true).order(経過日: :desc); #フラグ付け(期限間近:true)したもののみ表示させるため
             if request.post?
               render :partial => 'table' #テンプレート化しているので表の部分のみ差し替える
             end
         end
 
         def check
-          check = Kiban.find(params[:id]); #チェックボックスを操作したidの基盤のデータ
+            check = Kiban.find(params[:id]); #チェックボックスを操作したidの基板のデータ
             check.update(終了: !check.終了) #終了を反転させる
         end
 
@@ -118,10 +120,7 @@ class KibansController < ApplicationController
         end
 
         def change_date
-          #if(params[:select] != nil)
-          #  event = params[:select]
             date = Date.new params["date_1i"].to_i, params["date_2i"].to_i, params["date_3i"].to_i
             return date
-        #  end
         end
 end
